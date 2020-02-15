@@ -14,6 +14,9 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Windows.Storage;
+using Windows.ApplicationModel.VoiceCommands;
+using System.Diagnostics;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=402347&clcid=0x409
 
@@ -46,7 +49,7 @@ namespace Customers
         /// will be used such as when the application is launched to open a specific file.
         /// </summary>
         /// <param name="e">Details about the launch request and process.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        protected async override void OnLaunched(LaunchActivatedEventArgs e)
         {
 
 #if DEBUG
@@ -85,6 +88,16 @@ namespace Customers
             }
             // Ensure the current window is active
             Window.Current.Activate();
+
+            try
+            {
+                var storageFile = await Package.Current.InstalledLocation.GetFileAsync(@"CustomerVoiceCommands.xml");
+                await VoiceCommandDefinitionManager.InstallCommandDefinitionsFromStorageFileAsync(storageFile);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Installing Voice Commands Failed:{ex.ToString()}");
+            }
         }
 
         /// <summary>

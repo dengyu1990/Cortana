@@ -101,6 +101,7 @@
     </Compile>
     <Compile Include="Command.cs" />
     <Compile Include="Customer.cs" />
+    <Compile Include="DataSource.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -114,6 +115,7 @@
     <None Include="Customers_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="CustomerVoiceCommands.xml" />
     <Content Include="Images\wood.jpg" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
