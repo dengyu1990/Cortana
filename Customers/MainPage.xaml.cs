@@ -36,5 +36,15 @@ namespace Customers
             ViewModel viewModel = new ViewModel();
             this.DataContext = viewModel;
         }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            string customerName = e.Parameter as string;
+            if (!string.IsNullOrEmpty(customerName))
+            {
+                ViewModel viewModel = new ViewModel(customerName);
+                this.DataContext = viewModel;
+            }
+        }
     }
 }

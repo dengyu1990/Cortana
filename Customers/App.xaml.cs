@@ -123,5 +123,38 @@ namespace Customers
             //TODO: Save application state and stop any background activity
             deferral.Complete();
         }
+
+        protected override void OnActivated(IActivatedEventArgs args)
+        {
+            base.OnActivated(args);
+            if (args.Kind == ActivationKind.VoiceCommand)
+            {
+                var commandArgs = args as VoiceCommandActivatedEventArgs;
+                var speechRecognitionResult = commandArgs.Result;
+                var commandName = speechRecognitionResult.RulePath.First();
+
+                string customerName = "";
+                switch (commandName)
+                {
+                    case "showDetailsOf":
+                        customerName = speechRecognitionResult.SemanticInterpretation.Properties["customer"].FirstOrDefault();
+                        break;
+                    default:
+                        break;
+                }
+
+                Frame rootFrame = Window.Current.Content as Frame;
+                if (rootFrame == null)
+                {
+                    rootFrame = new Frame();
+                    rootFrame.NavigationFailed += OnNavigationFailed;
+                    Window.Current.Content = rootFrame;
+                }
+
+                rootFrame.Navigate(typeof(MainPage), customerName);
+                Window.Current.Activate();
+            }
+
+        }
     }
 }

@@ -20,6 +20,13 @@ namespace Customers
             this.customers = DataSource.Customers;
         }
 
+        public ViewModel(string customerName)
+        {
+            _initializeState();
+            string[] names = customerName.Split(new[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries);
+            this.customers = (from c in DataSource.Customers where string.Compare(c.FirstName.ToUpper(), names[0].ToUpper()) == 0 && (names.Length > 1 ? string.Compare(c.LastName.ToUpper(), names[1].ToUpper()) == 0 : true) select c).ToList();
+        }
+
         private void _initializeState()
         {
             this.currentCustomer = 0;
