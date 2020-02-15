@@ -132,7 +132,7 @@ namespace Customers
                 var commandArgs = args as VoiceCommandActivatedEventArgs;
                 var speechRecognitionResult = commandArgs.Result;
                 var commandName = speechRecognitionResult.RulePath.First();
-
+                string commandMode = speechRecognitionResult.SemanticInterpretation.Properties["commandMode"].FirstOrDefault();
                 string customerName = "";
                 switch (commandName)
                 {
@@ -151,7 +151,7 @@ namespace Customers
                     Window.Current.Content = rootFrame;
                 }
 
-                rootFrame.Navigate(typeof(MainPage), customerName);
+                rootFrame.Navigate(typeof(MainPage), new NavigationArgs(customerName, commandMode));
                 Window.Current.Activate();
             }
 

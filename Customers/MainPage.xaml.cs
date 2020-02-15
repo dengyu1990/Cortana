@@ -12,6 +12,8 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Windows.Media.SpeechSynthesis;
+using System.Threading.Tasks;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -37,14 +39,42 @@ namespace Customers
             this.DataContext = viewModel;
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            string customerName = e.Parameter as string;
-            if (!string.IsNullOrEmpty(customerName))
+            NavigationArgs args = e.Parameter as NavigationArgs;
+            if (args != null)
             {
+                string customerName = args.customerName;
                 ViewModel viewModel = new ViewModel(customerName);
                 this.DataContext = viewModel;
+
+                if (args.commandMode == "voice")
+                {
+                    if (viewModel.Current != null)
+                    {
+                        await Say($"Here are the details for {customerName}");
+                    }
+                    else
+                    {
+                        await Say($"{customerName} was not found");
+                    }
+                }
             }
+            //string customerName = e.Parameter as string;
+            //if (!string.IsNullOrEmpty(customerName))
+            //{
+            //    ViewModel viewModel = new ViewModel(customerName);
+            //    this.DataContext = viewModel;
+            //}
+        }
+
+        private async Task Say(string message)
+        {
+            MediaElement mediaElement = new MediaElement();
+            var synth = new SpeechSynthesizer();
+            SpeechSynthesisStream stream = await synth.SynthesizeTextToStreamAsync(message);
+            mediaElement.SetSource(stream, stream.ContentType);
+            mediaElement.Play();
         }
     }
 }
